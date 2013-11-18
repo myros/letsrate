@@ -10,6 +10,7 @@ module Letsrate
         r.save!          
       end
     else
+      logger.info('here')
       previous_rate = rates(dimension).where(:rater_id => rater.id).first
       previous_rate.stars = stars
       previous_rate.save!
@@ -35,7 +36,7 @@ module Letsrate
   end        
       
   def can_rate?(rater, dimension=nil)
-    val = self.connection.select_value("select count(*) as cnt from rates where rateable_id=#{self.id} and rateable_type='#{self.class.name}' and rater_id=#{rater.id} and dimension='#{dimension}'").to_i
+    val = self.class.connection.select_value("select count(*) as cnt from rates where rateable_id=#{self.id} and rateable_type='#{self.class.name}' and rater_id=#{rater.id} and dimension='#{dimension}'").to_i
     if val == 0
       true
     else

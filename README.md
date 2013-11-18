@@ -8,7 +8,7 @@ Provides the best way to add rating capabilites to your Rails application with j
 
 ## Repository
 
-Find it at [github.com/muratguzel/letsrate](https://github.com/muratguzel/letsrate)
+Find it at [github.com/myros/letsrate](https://github.com/myros/letsrate)
 
 ## Instructions
 
@@ -17,7 +17,7 @@ Find it at [github.com/muratguzel/letsrate](https://github.com/muratguzel/letsra
 Add the letsrate gem into your Gemfile
 
 ```ruby
-gem 'letsrate'
+gem 'letsrate', github: 'myros/letsrate'
 ```
 
 ### Generate
