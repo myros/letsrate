@@ -2,15 +2,15 @@ require 'active_support/concern'
 module Letsrate
   extend ActiveSupport::Concern
   
-  def rate(stars, user_id, dimension=nil)
-    if can_rate? user_id, dimension
+  def rate(stars, rater, dimension=nil)
+    if can_rate? rater, dimension
       rates(dimension).build do |r|
         r.stars = stars
-        r.rater_id = user_id
+        r.rater_id = rater.id
         r.save!          
       end
     else
-      previous_rate = rates(dimension).where(:rater_id => user_id).first
+      previous_rate = rates(dimension).where(:rater_id => rater.id).first
       previous_rate.stars = stars
       previous_rate.save!
     end
@@ -34,8 +34,8 @@ module Letsrate
     end      
   end        
       
-  def can_rate?(user_id, dimension=nil)
-    val = self.connection.select_value("select count(*) as cnt from rates where rateable_id=#{self.id} and rateable_type='#{self.class.name}' and rater_id=#{user_id} and dimension='#{dimension}'").to_i
+  def can_rate?(rater, dimension=nil)
+    val = self.connection.select_value("select count(*) as cnt from rates where rateable_id=#{self.id} and rateable_type='#{self.class.name}' and rater_id=#{rater.id} and dimension='#{dimension}'").to_i
     if val == 0
       true
     else
