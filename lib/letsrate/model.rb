@@ -36,7 +36,19 @@ module Letsrate
   end        
       
   def can_rate?(rater, dimension=nil)
-    val = self.class.connection.select_value("select count(*) as cnt from rates where rateable_id=#{self.id} and rateable_type='#{self.class.name}' and rater_id=#{rater.id} and dimension='#{dimension}'").to_i
+    logger.info dimension
+    
+    sql = "select count(*) as cnt from rates where rateable_id=#{self.id} and rateable_type='#{self.class.name}' and rater_id=#{rater.id} "
+    if dimension.nil?
+      logger.info dimension.present?
+      sql << "and dimension is null"
+    else
+      sql << "and dimension='#{dimension}'"
+    end
+    
+    val = self.class.connection.select_value(sql).to_i
+    logger.info val
+    
     if val == 0
       true
     else
